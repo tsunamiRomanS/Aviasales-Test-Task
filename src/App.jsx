@@ -12,7 +12,7 @@ export default class App extends Component {
         searchId: null,
         filterSidebar: [
             { id: 0, name: "Все", value: false, stops: false},
-            { id: 4, name: "Без пересадок", value: false, stops: [] }, //stops.length === 0 true
+            { id: 4, name: "Без пересадок", value: false, stops: 0 },
             { id: 1, name: "1 пересадка", value: false, stops: 1 },
             { id: 2, name: "2 пересадки", value: false, stops: 2 },
             { id: 3, name: "3 пересадки", value: false, stops: 3 },

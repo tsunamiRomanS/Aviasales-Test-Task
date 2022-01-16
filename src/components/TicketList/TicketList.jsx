@@ -20,37 +20,33 @@ export default class TicketList extends Component {
     state = {
         ticketList: [],
         spinner: true,
-        showSliceTickets: 5
+        showSliceTickets: 5,
     };
     componentDidUpdate(prevProps) {
         if (this.props.searchId !== prevProps.searchId) {
             axios.get(`https://front-test.beta.aviasales.ru/tickets?searchId=${this.props.searchId}`)
-                .then((res) => {
-                    this.setState({
-                        ticketList: res.data.tickets,
-                        spinner: false
-                    });
-                });
+                .then((res) => this.setState({ ticketList: res.data.tickets, spinner: false, }));
         };
-        if (this.props.filterSidebar !== prevProps.filterSidebar) {
-            //selected.stops
-            // res.data.tickets
-            this.setState({ ticketList: [], spinner: true })
+        if (prevProps.filterSidebar !== this.props.filterSidebar) {
+            this.setState({
+                ticketList: [],
+                spinner: true
+            });
             axios.get(`https://front-test.beta.aviasales.ru/tickets?searchId=${this.props.searchId}`)
                 .then((res) => {
-                    this.props.filterSidebar.forEach((selected) => {
-                        if (selected.value) {
+                    this.props.filterSidebar.filter((el) => {
+                        if (el.value) {
+                            const { stops } = el
+                            console.log(stops);
                             res.data.tickets.map((item) => {
-                                if (item.segments[0].stops.length === selected.stops && item.segments[1].stops.length === selected.stops) {
-                                    this.setState(({ ticketList }) => {
-                                        return {
-                                            ticketList: [...ticketList, { ...item }],
-                                            spinner: false
-                                        }
-                                    });
+                                if (item.segments[0].stops.length === stops && item.segments[1].stops.length === stops) {
+                                    this.setState(({ ticketList }) => ({
+                                        ticketList: [...ticketList, item],
+                                        spinner: false
+                                    }));
                                 };
                             });
-                        }
+                        };
                     });
                 });
         };
